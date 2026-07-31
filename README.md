@@ -4,39 +4,19 @@
 
 # Glovo — Delivery Time Optimization
 
-### When delivery performance drops, where do you look first?
-
-Most people would start with distance.
-
-Longer trips should lead to longer delivery times, making the obvious solution to reduce the delivery radius or hire more couriers.
-
-Those changes are also among the most expensive a delivery platform can make.
-
-Before recommending operational changes, I wanted to answer a much simpler question:
-
-**Where does delivery time actually go?**
-
-Using one week of operational data covering 2,471 food deliveries, 83 couriers, and 68 restaurants, I decomposed every order into its individual stages to identify where delays were introduced, which operational bottlenecks had the greatest business impact, and which improvements would deliver the highest return.
-
-The objective wasn't simply to explain why deliveries were late.
-
-It was to identify the smallest operational changes capable of moving the platform closer to its target of delivering 85% of all orders within 45 minutes.
-
----
-
-## Business Problem
-
-That week, Glovo achieved an on-time delivery rate of **73.47%**.
+**Glovo's target: 85% of food orders delivered within 45 minutes. That week it hit 73.47%.**
 
 Roughly one in four customers waited longer than the company's target, creating a measurable impact on customer satisfaction and operational efficiency.
 
-The question wasn't:
+The intuitive explanation is distance — longer trips, longer deliveries — and the intuitive fix is a smaller delivery radius or more couriers. Both are among the most expensive changes a delivery platform can make.
 
-> Why are some deliveries slow?
+So before recommending anything, I wanted to answer a much simpler question:
 
-The real question was:
+### Where does delivery time actually go?
 
-> Which parts of the delivery process contribute most to missing the SLA, and which improvements should be prioritized first?
+Using one week of operational data covering 2,471 food deliveries, 83 couriers, and 68 restaurants, I decomposed every order into its individual stages to find where the time was lost.
+
+The goal wasn't to explain why deliveries were late. It was to identify the smallest operational changes capable of closing that 11.5-point gap.
 
 ---
 
