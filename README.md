@@ -4,6 +4,8 @@
 
 # Glovo — Delivery Time Optimization
 
+> The dataset used in this project was provided by Glovo during the recruitment process. Permission was obtained to publish this analysis as a portfolio case study.
+
 **Glovo aimed for 85% of deliveries within 45 minutes—but achieved only 73.47%.**
 
 More than one in four deliveries missed the target, creating pressure on customer experience and operational efficiency.
