@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/00-glovo-banner.jpg" alt="Glovo" width="640">
+</p>
+
 # Glovo — Delivery Time Optimization
 
 ### When delivery performance drops, where do you look first?
