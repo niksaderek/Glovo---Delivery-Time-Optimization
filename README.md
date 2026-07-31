@@ -139,17 +139,16 @@ Sometimes improving an entire network starts with fixing only a handful of outli
 
 Vehicle type was not the primary driver of delivery delays, but it revealed an interesting operational signal.
 
-Cars showed longer average delivery times than motorbikes despite covering similar distances:
+Cars showed longer average delivery times than motorbikes despite covering similar distances — and were reassigned more often:
 
-Vehicle Type	Average Delivery Time
-Motorbike	58.6 min
-Car	63.0 min
+| Vehicle Type | Average Delivery Time | Average Assignments | Average Distance |
+|---|---|---|---|
+| Motorbike | 58.6 min | 1.31 | 7.23 km |
+| Car | 63.0 min | 1.45 | 7.13 km |
 
-Cars also had a higher average reassignment rate:
+Cars took 4.4 minutes longer while covering slightly less ground.
 
-Vehicle Type	Average Assignments
-Motorbike	1.31
-Car	1.45
+![Delivery time by transport type](docs/images/08-delivery-time-by-transport.png)
 
 The dataset cannot determine the exact reason behind this difference, but possible factors include parking limitations, reduced flexibility in dense urban areas, or different courier behaviour patterns.
 
