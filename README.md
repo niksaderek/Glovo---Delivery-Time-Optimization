@@ -1,128 +1,208 @@
 # Glovo — Delivery Time Optimization
 
-### Everyone blamed distance. Distance had an alibi.
+### When delivery performance drops, where do you look first?
+
+Most people would start with distance.
+
+Longer trips should lead to longer delivery times, making the obvious solution to reduce the delivery radius or hire more couriers.
+
+Those changes are also among the most expensive a delivery platform can make.
+
+Before recommending operational changes, I wanted to answer a much simpler question:
+
+**Where does delivery time actually go?**
+
+Using one week of operational data covering 2,471 food deliveries, 83 couriers, and 68 restaurants, I decomposed every order into its individual stages to identify where delays were introduced, which operational bottlenecks had the greatest business impact, and which improvements would deliver the highest return.
+
+The objective wasn't simply to explain why deliveries were late.
+
+It was to identify the smallest operational changes capable of moving the platform closer to its target of delivering 85% of all orders within 45 minutes.
 
 ---
 
-A week of food delivery in the city of Glovalia: 2,471 orders, 83 couriers, 68 restaurants. Somewhere in that week, roughly 270 dinners showed up late enough that the customer noticed.
+## Business Problem
 
-The number that matters to the business is simple. What share of food orders reach the customer within 45 minutes? Glovo wants 85%. That week it got **73.47%** — eleven and a half points short, which in a single city is a few hundred disappointed people every seven days.
+That week, Glovo achieved an on-time delivery rate of **73.47%**.
 
-So: where does an order lose its eleven minutes?
+Roughly one in four customers waited longer than the company's target, creating a measurable impact on customer satisfaction and operational efficiency.
 
-![Delivery time by hour of the day](docs/images/01-hero-delivery-time-by-hour.png)
+The question wasn't:
 
-Look at the shape of that chart before reading on. Delivery times sit flat and healthy through the whole working day, and then, somewhere around eight in the evening, they come apart. That's the first hint that whatever is going wrong isn't a constant — it's something that only breaks under load.
+> Why are some deliveries slow?
 
----
+The real question was:
 
-## The suspect everyone likes
-
-Ask anyone why food delivery runs late and they'll tell you the couriers are travelling too far. It's the intuitive answer, and it comes with an expensive, obvious fix: cap the delivery radius.
-
-The data doesn't back it. Across all orders, the correlation between distance travelled and time taken is **0.32** — real, but weak. Distance explains roughly a tenth of what's going on.
-
-Then comes the part that settles it. Isolate only the orders that actually breached 45 minutes — the failures, the ones we're trying to explain — and the correlation *drops* to **0.23**.
-
-Distance matters least precisely where it would need to matter most. Whatever makes an order late, it isn't the length of the trip. It's everything that happens before the courier ever starts moving.
+> Which parts of the delivery process contribute most to missing the SLA, and which improvements should be prioritized first?
 
 ---
 
-## Suspect one: the handoff
+## Investigation Approach
 
-Every order gets assigned to a courier. Sometimes that courier doesn't take it, and the order gets passed to another. It sounds like a minor administrative event. It is not.
+Rather than analysing delivery time as a single metric, I broke every delivery into its operational stages:
+
+1. Order activation
+2. Courier assignment
+3. Courier acceptance
+4. Travel to restaurant
+5. Waiting at restaurant
+6. Travel to customer
+7. Final handoff
+
+This allowed every minute of a delivery to be traced back to a specific operational process instead of treating delivery time as one black-box KPI.
+
+Each hypothesis was then tested independently, including:
+
+- Does delivery distance explain delays?
+- Do courier reassignments increase delivery time?
+- Which delivery stage consumes the most time?
+- Are delays random or concentrated around predictable demand peaks?
+- Which restaurants and couriers contribute disproportionately to cancellations?
+
+---
+
+## Key Findings
+
+### Finding 1 — Distance Wasn't the Main Bottleneck
+
+The most intuitive explanation turned out to be one of the weakest.
+
+Across all deliveries, distance showed only a **0.32 correlation** with total delivery time.
+
+More importantly, when analysing only deliveries that exceeded the 45-minute SLA, that relationship collapsed to **0.02** — effectively no relationship at all.
+
+If distance were truly driving poor performance, its influence should become stronger among late deliveries—not disappear entirely.
+
+This ruled out one of the most expensive operational interventions before any recommendations were made.
+
+![Distance versus delivery time, all orders and late orders](docs/images/11-distance-vs-delivery-time.png)
+
+The line on the left slopes. The line on the right is flat. Whatever makes an order late, it isn't the length of the trip.
+
+### Finding 2 — Courier Reassignments Break the SLA
+
+Every time an order changed couriers, delivery performance deteriorated significantly.
+
+| Assignments | Average Delivery Time |
+|---|---|
+| 1 | 36 min |
+| 2 | 47 min |
+| 3 | 55 min |
+| 4 | 80 min |
+
+The second assignment alone pushed the average delivery beyond the platform's target.
+
+Although only 13% of deliveries experienced a reassignment, those orders represented a disproportionate share of late deliveries and cancelled orders.
+
+Rather than treating reassignment as an administrative event, the analysis identified it as one of the platform's highest-impact operational bottlenecks.
 
 ![Delivery time by number of courier assignments](docs/images/02-delivery-time-by-assignments.png)
 
-The median line crosses the target the instant a second courier gets involved.
+### Finding 3 — The Longest Part of Delivery Isn't Delivery
 
-| Assignments | Average time | Share of orders |
-|---|---|---|
-| 1 | **36 min** — comfortably inside | 86.9% |
-| 2 | **47 min** — outside | 10.7% |
-| 3 | 55 min | 2.1% |
-| 4 | 80 min | 0.3% |
+Breaking the process into individual stages revealed the most surprising insight.
 
-One handoff costs 23.6% of the delivery time. That single step is the difference between a customer who's happy and a customer who's watching the app.
+| Delivery Stage | Median Time |
+|---|---|
+| Order → Courier Assigned | 1.2 min |
+| Assignment → Courier Starts | 2.8 min |
+| Travel to Restaurant | 6.4 min |
+| **Waiting at Restaurant** | **11.8 min** |
+| Restaurant → Customer | 7.6 min |
+| Final Handoff | 3.3 min |
 
-Most orders never touch it — 87% are matched once and go. But the ones that do reassign do real damage: **318 orders, 13.3% of the entire week, missed the target with a reassignment attached to them.**
+Couriers spent more time waiting inside restaurants than delivering food to customers.
 
-There's a darker version of the same story. Orders that were eventually cancelled had been passed around an average of 1.46 times, against 1.17 for orders in general. Reassignment isn't only a delay — past a certain point it's how an order dies.
+That finding fundamentally changes where improvements should be made.
 
----
+Unlike driving distance, restaurant waiting time represents operational waste.
 
-## Suspect two: the eleven minutes nobody counts
-
-If the trip isn't the problem, the problem has to be somewhere in the choreography before it. So break a delivery into its six real stages and time each one.
+Reducing that delay doesn't require additional couriers or smaller delivery zones—it requires better synchronization between restaurant preparation and courier arrival.
 
 ![Delivery stage breakdown](docs/images/10-delivery-stage-breakdown.png)
 
-| Stage | Median |
-|---|---|
-| Order activates → courier assigned | 1.2 min |
-| Courier assigned → courier starts | 2.8 min |
-| Courier starts → arrives at restaurant | 6.4 min |
-| **Standing in the restaurant, waiting** | **11.8 min** |
-| Restaurant → customer *(the actual driving)* | 7.6 min |
-| Finding the door | 3.3 min |
+### Finding 4 — Delays Follow Demand
 
-Read those two bolded rows together, because that's the finding.
+Delivery performance remained relatively stable throughout most of the day before deteriorating rapidly during the evening peak.
 
-**Couriers spend more time waiting for food than they spend delivering it.** Eleven point eight minutes leaning against a counter, versus seven point six actually on the road. The single largest block of time in the whole journey is a courier standing still.
+The pattern closely mirrored order volume.
 
-And this is the good news, because that time is free. It doesn't require more couriers, more vehicles, or a smaller delivery radius. It requires the restaurant to start cooking at a moment that bears some relationship to when the courier walks in. Right now those two clocks aren't talking to each other.
+Orders peaked between 19:00–21:00, while delivery times peaked shortly afterward, suggesting that operational capacity was consistently falling behind demand.
 
----
+This indicates a scheduling problem rather than a routing problem.
 
-## Suspect three: a three-hour window
+Demand is predictable.
 
-Remember the evening collapse in the opening chart. Here's what's underneath it.
+Courier availability wasn't.
+
+![Delivery time by hour of the day](docs/images/01-hero-delivery-time-by-hour.png)
 
 ![Orders per hour](docs/images/05-orders-by-hour.png)
 
-Orders peak between 19:00 and 21:00. Delivery times peak, slightly behind them, between 20:00 and 23:00 — the lag you'd expect when a system takes on more than it can absorb and spends the next hour catching up.
+### Finding 5 — Operational Problems Were Highly Concentrated
 
-![Orders per day](docs/images/06-orders-by-day.png)
+The analysis also showed that cancellations were far from evenly distributed.
 
-The week has the same shape. Wednesday, Saturday and Tuesday run the longest deliveries; Saturday, Wednesday and Sunday carry the most orders.
+Although the platform's cancellation rate was only 3.3%, nearly 40% of all cancellations originated from just two restaurants.
 
-None of this is random, and that's what makes it useful. The strain arrives on a schedule. Courier supply, right now, does not.
+Rather than requiring platform-wide policy changes, this insight points toward highly targeted operational intervention.
 
----
-
-## Two loose ends
-
-**The cars.** Motorbikes average 58.6 minutes; cars average 63 and get reassigned noticeably more often (1.45 versus 1.31) — despite covering essentially the same distance. Something about running a car in a dense town costs time that has nothing to do with the driving, and parking is the obvious guess. I'd flag it rather than claim it; this dataset can't see a courier circling for a space.
-
-![Delivery time by transport type](docs/images/08-delivery-time-by-transport.png)
-
-**The cancellations.** 3.32% of orders were cancelled, which is a perfectly respectable number and easy to wave through. But it isn't spread evenly. Restaurant `18300` and restaurant `30640`, between them, account for **39% of every cancellation that week.** That's not a platform problem to be solved with policy. That's two phone calls.
+Sometimes improving an entire network starts with fixing only a handful of outliers.
 
 ---
 
-## What to do about it
+## Recommendations
 
-Four weeks, one bottleneck at a time — introduced sequentially, so each one's contribution stays visible rather than tangled up with the others.
+Based on the findings, I prioritized interventions according to expected business impact.
 
-| Week | The move | KPI after | Gain |
-|---|---|---|---|
-| — | Where we started | 73.47% | — |
-| 1 | Cut reassignments — better matching, acceptance incentives | 76.43% | +2.96 |
-| 2 | Staff the peak, discount the trough | 77.78% | +1.35 |
-| 3 | Move car deliveries onto motorbikes | 79.63% | +1.85 |
-| 4 | Attack the restaurant wait | 82.97% | +3.34 |
-| 5 | Chase the cancellation outliers | 83.23% | +0.26 |
-| 6 | Speed up initial assignment | **84.63%** | +1.40 |
-
-Four weeks recovers 9.5 of the missing 11.5 points. Six weeks lands at 84.63% — close enough to touch the target.
-
-The two interventions that pay best, weeks 1 and 4, are the same two bottlenecks the investigation turned up first. That's not a coincidence, it's the whole argument: find where the time actually goes, and the plan writes itself.
-
-> **One caveat, stated up front.** The week-by-week figures come from a simulation over 10,000 synthetic deliveries, and the improvement coefficients in it were *chosen, not causally estimated from the data.* What the simulation demonstrates is the **ordering and rough magnitude** of the levers — that fixing reassignments and restaurant waiting beats fixing distance. It is not a forecast, and real effect sizes need in-market A/B testing to establish. I'd rather say that plainly here than let a reader mistake a model for a promise.
+| Priority | Recommendation | Expected Impact |
+|---|---|---|
+| High | Reduce courier reassignments through improved matching and acceptance incentives | Highest |
+| High | Synchronize restaurant preparation with courier arrival | Highest |
+| Medium | Increase courier supply during evening peaks | Medium |
+| Medium | Shift more deliveries toward motorbikes where appropriate | Medium |
+| Low | Investigate restaurants with unusually high cancellation rates | Targeted |
 
 ---
 
-## Run it yourself
+## Estimated Impact
+
+To evaluate how these interventions might combine, I created a simulation modelling sequential operational improvements.
+
+| Stage | On-Time Delivery Rate |
+|---|---|
+| Current Performance | 73.47% |
+| Reduce Reassignments | 76.43% |
+| Improve Peak Staffing | 77.78% |
+| Optimize Vehicle Allocation | 79.63% |
+| Reduce Restaurant Waiting | 82.97% |
+| Address Cancellation Outliers | 83.23% |
+| Improve Initial Assignment | **84.63%** |
+
+The simulation demonstrates relative impact rather than predicting exact outcomes.
+
+Its purpose is to prioritize operational improvements, not replace real-world experimentation.
+
+---
+
+## Technical Highlights
+
+This project demonstrates an end-to-end analytics workflow:
+
+- Data cleaning and preprocessing with Python
+- Feature engineering from timestamp data
+- Process decomposition into operational stages
+- Exploratory data analysis
+- Correlation and bottleneck analysis
+- Outlier detection
+- Operational KPI reporting
+- Business recommendation framework
+- Scenario simulation
+
+**Tools:** Python • pandas • NumPy • Matplotlib • Seaborn • Jupyter Notebook
+
+---
+
+## Repository
 
 ```bash
 git clone https://github.com/niksaderek/Glovo---Delivery-Time-Optimization.git
@@ -131,12 +211,18 @@ pip install pandas numpy matplotlib seaborn openpyxl
 jupyter notebook notebook.ipynb
 ```
 
-The data ships with the repo. Run the notebook top to bottom and every number and figure above regenerates from source.
-
-**How it works:** parse seven timestamp fields into a consistent shape → drop cancelled and non-food orders, since neither can be judged against a 45-minute food KPI (2,471 → 2,322) → derive `delivery_time` as termination minus activation → decompose each order into its six stages, which is what makes the waiting problem visible at all → segment by assignment count, hour, weekday, transport, restaurant and courier → isolate outliers per stage with IQR → simulate.
-
-**Built with:** Python · pandas · NumPy · Matplotlib · seaborn · Jupyter
+The notebook reproduces every chart, metric, and recommendation presented in this case study directly from the provided dataset.
 
 ---
 
-*An anonymised operational dataset, analysed as a portfolio case study. Restaurant and courier IDs are pseudonymous integers; there's no personal data here.*
+## Final Thought
+
+This project isn't about food delivery.
+
+It's about finding the constraint inside a system.
+
+The obvious explanation—distance—wasn't wrong, but it wasn't the bottleneck either.
+
+By decomposing the delivery process into measurable stages, the analysis identified where time was actually being lost, allowing operational improvements to be prioritized based on evidence rather than intuition.
+
+That's the difference between reporting what happened and diagnosing why it happened.
