@@ -4,7 +4,7 @@
 
 # Glovo — Delivery Time Optimization
 
-**Glovo promised fast delivery. The data showed a different story. Glovo aimed for 85% of deliveries within 45 minutes—but achieved only 73.47%.**
+**Glovo aimed for 85% of deliveries within 45 minutes—but achieved only 73.47%.**
 
 Roughly one in four customers waited longer than the company's target, creating a measurable impact on customer satisfaction and operational efficiency.
 
