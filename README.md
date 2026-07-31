@@ -4,7 +4,7 @@
 
 # Glovo — Delivery Time Optimization
 
-**Glovo's target: 85% of food orders delivered within 45 minutes. That week it hit 73.47%.**
+**Glovo's target: 85% of food orders delivered within 45 minutes. Across the week analysed, it hit 73.47%.**
 
 Roughly one in four customers waited longer than the company's target, creating a measurable impact on customer satisfaction and operational efficiency.
 
