@@ -6,15 +6,17 @@
 
 **Glovo aimed for 85% of deliveries within 45 minutes—but achieved only 73.47%.**
 
-Roughly one in four customers waited longer than the company's target, creating a measurable impact on customer satisfaction and operational efficiency.
+More than one in four deliveries missed the target, creating pressure on customer experience and operational efficiency.
 
-The intuitive explanation was distance — longer trips, longer deliveries — and the intuitive fix would be to implement a smaller delivery radius or more couriers. Both are among the most expensive changes a delivery platform can make.
+The intuitive explanation was distance — longer trips, longer deliveries.
 
-So before recommending anything, I wanted to answer a much simpler question:
+The intuitive fix would be to reduce the delivery radius or add more couriers. Both are among the most expensive changes a delivery platform can make.
 
-### Where does delivery time actually go?
+Before recommending anything, I wanted to answer a simpler question:
 
-Using the operational data - 2,471 food deliveries, 83 couriers, 68 restaurants — I decomposed every order into its individual stages to find where the time was lost.
+Where does delivery time actually go?
+
+Using operational data from 2,471 food deliveries, 83 couriers, and 68 restaurants, I decomposed every order into its individual stages to identify where time was being lost and which operational bottlenecks had the greatest impact.
 
 ---
 
@@ -39,6 +41,7 @@ Each hypothesis was then tested independently, including:
 - Which delivery stage consumes the most time?
 - Are delays random or concentrated around predictable demand peaks?
 - Which restaurants and couriers contribute disproportionately to cancellations?
+- Does vehicle type influence delivery performance?
 
 ---
 
@@ -129,6 +132,28 @@ Although the platform's cancellation rate was only 3.3%, nearly 40% of all cance
 Rather than requiring platform-wide policy changes, this insight points toward highly targeted operational intervention.
 
 Sometimes improving an entire network starts with fixing only a handful of outliers.
+
+---
+
+### Additional Investigation — Vehicle Type
+
+Vehicle type was not the primary driver of delivery delays, but it revealed an interesting operational signal.
+
+Cars showed longer average delivery times than motorbikes despite covering similar distances:
+
+Vehicle Type	Average Delivery Time
+Motorbike	58.6 min
+Car	63.0 min
+
+Cars also had a higher average reassignment rate:
+
+Vehicle Type	Average Assignments
+Motorbike	1.31
+Car	1.45
+
+The dataset cannot determine the exact reason behind this difference, but possible factors include parking limitations, reduced flexibility in dense urban areas, or different courier behaviour patterns.
+
+This is a signal worth investigating further, but not enough evidence to justify a fleet-wide change without additional data.
 
 ---
 
