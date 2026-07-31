@@ -60,7 +60,7 @@ This ruled out one of the most expensive operational interventions before any re
 
 The line on the left slopes. The line on the right is flat. Whatever makes an order late, it isn't the length of the trip.
 
-### Finding 2 — Courier Reassignments Break the SLA
+### Finding 2 — Courier Reassignments Break the SLA [Service Level Agreement]
 
 Every time an order changed couriers, delivery performance deteriorated significantly.
 
