@@ -8,15 +8,13 @@
 
 Roughly one in four customers waited longer than the company's target, creating a measurable impact on customer satisfaction and operational efficiency.
 
-The intuitive explanation is distance — longer trips, longer deliveries — and the intuitive fix is a smaller delivery radius or more couriers. Both are among the most expensive changes a delivery platform can make.
+The intuitive explanation was distance — longer trips, longer deliveries — and the intuitive fix would be to implement a smaller delivery radius or more couriers. Both are among the most expensive changes a delivery platform can make.
 
 So before recommending anything, I wanted to answer a much simpler question:
 
 ### Where does delivery time actually go?
 
-Using operational data from 8–14 July 2019 — 2,471 food deliveries, 83 couriers, 68 restaurants — I decomposed every order into its individual stages to find where the time was lost.
-
-The goal wasn't to explain why deliveries were late. It was to identify the smallest operational changes capable of closing that 11.5-point gap.
+Using the operational data - 2,471 food deliveries, 83 couriers, 68 restaurants — I decomposed every order into its individual stages to find where the time was lost.
 
 ---
 
