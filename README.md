@@ -4,7 +4,7 @@
 
 # Glovo — Delivery Time Optimization
 
-**Glovo's target: 85% of food orders delivered within 45 minutes. Across the week analysed, it hit 73.47%.**
+**Glovo's target: 85% of food orders delivered within 45 minutes. Over seven days of operations, it hit 73.47%.**
 
 Roughly one in four customers waited longer than the company's target, creating a measurable impact on customer satisfaction and operational efficiency.
 
@@ -14,7 +14,7 @@ So before recommending anything, I wanted to answer a much simpler question:
 
 ### Where does delivery time actually go?
 
-Using one week of operational data covering 2,471 food deliveries, 83 couriers, and 68 restaurants, I decomposed every order into its individual stages to find where the time was lost.
+Using operational data from 8–14 July 2019 — 2,471 food deliveries, 83 couriers, 68 restaurants — I decomposed every order into its individual stages to find where the time was lost.
 
 The goal wasn't to explain why deliveries were late. It was to identify the smallest operational changes capable of closing that 11.5-point gap.
 
